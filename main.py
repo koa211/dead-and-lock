@@ -5,7 +5,7 @@ import json
 import requests
 """
 3 general statistic page for ranked
-3.1 get 100 most recent ranked matches of the day
+3.1 get 10 most recent ranked matches of the day
 """
 def get100():
     url = "https://api.deadlock-api.com/v1/matches/metadata"
@@ -17,8 +17,8 @@ def get100():
         }
     
     response = requests.get(url, params=params)
-    
-    print(response)
+    byte_j = json.loads(response.content.decode('utf-8'))
+    print(byte_j)
     
 
 def main():    
