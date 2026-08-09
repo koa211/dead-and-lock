@@ -17,6 +17,9 @@ what are we tracking?
 3.1 get 10 most recent ranked matches of the day
 3.2 for each individual match, get the rank of each player -> average that
 3.3 plot a histogram and display the trends of matches
+
+4 mini statlocker
+full stack deadlock analysis page
 """
 def get_matches():
     unix_timestamp = int((datetime.now() - datetime(1970, 1, 2)).total_seconds())
