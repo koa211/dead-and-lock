@@ -4,6 +4,6 @@ from django.db import models
 class Match(models.Model):
     match_id = models.IntegerField()
 
-    def __str__(self):
+    def __int__(self):
         return self.match_id
 
