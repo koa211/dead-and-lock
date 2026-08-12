@@ -8,7 +8,7 @@
 {% if recent_10_match_list %}
 <ul>
     {% for match in recent_10_match_list %}
-    <li><a href="/ranks/{{ match.id }}/">{{ match.match_id }}</a></li>
+    <li><a href="{% url 'match:daily' match.match_id %}">{{ match.match_id }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
