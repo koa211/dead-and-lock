@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from django.http import HttpResponse
 from django.template import loader
+from django.template.loader import render_to_string
 import sys
 import urllib
 import json
@@ -21,10 +22,8 @@ def index(request):
 
 def daily(request, match_id):
     template = loader.get_template("ranks/match_details.html")
-    # api call here
-    lobby_sum = get_match_sum(match_id)
-    # by_damage()
     lobby_sum = {"match_details": get_match_sum(match_id)}
+    print(repr(lobby_sum))
     return HttpResponse(template.render(lobby_sum, request))
 
 
@@ -68,7 +67,6 @@ def get_match_sum(match_id):
         for line in file:
             if "account_id" in line:
                 player_id = ''.join(re.findall(r'\d', line))
-                print(player_id)
                 player_name = get_acc_name(player_id)
 
             if "time_stamp_s" in line and line.strip()[15:19] == time:
@@ -80,21 +78,24 @@ def get_match_sum(match_id):
             if flag == True and "player_damage" in line:
                 player_dmg = ''.join(re.findall(r'\d', line))
 
-            if flag == True and "team" in line:
-                if ''.join(re.findall(r'\d', line)) == 1:
+            if flag == True and re.findall("\\bteam\\b", line):
+                if ''.join(re.findall(r'\d', line)) == '1':
                     player_team = "AM"
                 else:
                     player_team = "HK"
 
-            print(player_id, player_name, player_dmg, player_net, player_team)
+                flag = False
+                print(player_id, player_name, player_dmg, player_net, player_team)
+                ply = Player(player_id, player_name, player_dmg, player_net, player_team)
+                print(ply)
+                obj_list.append(ply)
 
-            # ply = Player(player_id, player_name, player_dmg, player_net, player_team)
-            # obj_list.append(ply)
-            flag = False
+    # fix missing attribute
+    print(obj_list[0].player_id)
+    obj_list.sort(key=lambda x: x.player_damage, reverse=True)
+    print(obj_list)
 
-            # next task stop inf prints
-
-    # return obj_list
+    return obj_list
 
 
 def get_acc_name(account_id):

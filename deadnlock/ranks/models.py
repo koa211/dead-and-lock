@@ -10,8 +10,12 @@ class Match(models.Model):
 
 
 class Player(models.Model):
-    account_id = models.IntegerField()
-    account_name = models.TextField()
+    player_id = models.TextField()
+    player_name = models.TextField()
     player_damage = models.IntegerField()
     player_souls = models.IntegerField()
     player_side = models.TextField()
+
+    def __str__(self):
+        return "%s %s %s %s %s" % (self.player_id, self.player_name, self.player_damage, self.player_souls,
+                                   self.player_side)

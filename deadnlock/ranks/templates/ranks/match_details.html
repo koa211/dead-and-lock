@@ -6,7 +6,9 @@
 </head>
 <body>
 <main>
-    <h1>{{ match_details }}</h1>
+    {% for player in match_details %}
+    <h1>{{ player }}</h1>
+    {% endfor %}
 </main>
 </body>
 </html>

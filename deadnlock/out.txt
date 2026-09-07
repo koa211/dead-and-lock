@@ -278534,5 +278534,6 @@
         "rank_interval":1
     },
     "hero_build_ids":{},
+    "pregame_hero_ids":{},
     "banned_hero_ids":[]
 }
