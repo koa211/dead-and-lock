@@ -86,12 +86,9 @@ def get_match_sum(match_id):
 
                 flag = False
                 print(player_id, player_name, player_dmg, player_net, player_team)
-                ply = Player(player_id, player_name, player_dmg, player_net, player_team)
-                print(ply)
+                ply = Player(0, player_id, player_name, player_dmg, player_net, player_team)
                 obj_list.append(ply)
 
-    # fix missing attribute
-    print(obj_list[0].player_id)
     obj_list.sort(key=lambda x: x.player_damage, reverse=True)
     print(obj_list)
 

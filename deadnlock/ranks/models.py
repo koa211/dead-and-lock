@@ -17,5 +17,5 @@ class Player(models.Model):
     player_side = models.TextField()
 
     def __str__(self):
-        return "%s %s %s %s %s" % (self.player_id, self.player_name, self.player_damage, self.player_souls,
-                                   self.player_side)
+        return "%s %s %s %s" % (self.player_name, self.player_damage, self.player_souls,
+                                self.player_side)
