@@ -1,5 +1,11 @@
+@font-face {
+    font-family: "valveoracle-medium";
+    src: url("../fonts/valveoracle-medium.ttf") format("truetype");
+}
+
 body {
-    font-family: Valve Pulp;
+    font-family: valveoracle-medium;
+    font-size: 8px;
     color: white;
     background-color: black;
     margin: 0;

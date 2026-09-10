@@ -10,6 +10,10 @@ import json
 import requests
 import re
 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
 from .models import Match, Player
 
 
@@ -22,9 +26,12 @@ def index(request):
 
 def daily(request, match_id):
     template = loader.get_template("ranks/match_details.html")
-    lobby_sum = {"match_details": get_match_sum(match_id)}
+    lobby_sum = get_match_sum(match_id)
     print(repr(lobby_sum))
-    return HttpResponse(template.render(lobby_sum, request))
+    # call another function that creates the data visualiation table
+    postmortem(lobby_sum)
+
+    # return HttpResponse(template.render(lobby_sum, request))
 
 
 # cache this somehow so I don't have to keep asking for it
@@ -93,6 +100,22 @@ def get_match_sum(match_id):
     print(obj_list)
 
     return obj_list
+
+
+def postmortem(lobby_sum):
+    df = pd.DataFrame([x.as_dict() for x in lobby_sum])
+    print(df)
+    names = [x.player_name for x in lobby_sum]
+    ply_dmg = [float(x.player_damage) for x in lobby_sum]
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    ax.barh(names, ply_dmg, color="#c9b287", label="Hero Damage")
+    # ax.set_xlim(0, int(max(ply_dmg)))
+    # ax.set_autoscalex_on(False)
+
+    ax.invert_yaxis()
+    plt.show()
 
 
 def get_acc_name(account_id):

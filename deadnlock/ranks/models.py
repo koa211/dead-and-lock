@@ -19,3 +19,9 @@ class Player(models.Model):
     def __str__(self):
         return "%s %s %s %s" % (self.player_name, self.player_damage, self.player_souls,
                                 self.player_side)
+
+    def as_dict(self):
+        return {
+            'Side': self.player_side, 'Player': self.player_name, "Damage": self.player_damage,
+            "Souls": self.player_souls
+        }
