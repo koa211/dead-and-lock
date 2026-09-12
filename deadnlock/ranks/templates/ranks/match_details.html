@@ -10,9 +10,26 @@
 </head>
 <body>
 <main>
-    {% for player in match_details %}
-    <h1>{{ player }}</h1>
-    {% endfor %}
+    <table>
+        <tr>
+            <th>Side</th>
+            <th>Name</th>
+            <th>Damage Chart</th>
+            <th>Souls</th>
+            <th>Damage</th>
+        </tr>
+        {% for player in match_details %}
+        <tr>
+            <td>{{ player.player_side }}</td>
+            <td>{{ player.player_name }}</td>
+            <td>
+                <div style="background:#c9b287; height:16px; width: {{ player.player_chart }}%;"></div>
+            </td>
+            <td>{{ player.player_souls }}</td>
+            <td>{{ player.player_damage }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </main>
 </body>
 </html>
