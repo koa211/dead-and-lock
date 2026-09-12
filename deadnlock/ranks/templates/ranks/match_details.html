@@ -1,12 +1,10 @@
 {% load static %}
-
-<link rel="stylesheet" href="{% static 'ranks/style.css' %}">
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'ranks/style.css' %}">
 </head>
 <body>
 <main>
@@ -23,7 +21,7 @@
             <td>{{ player.player_side }}</td>
             <td>{{ player.player_name }}</td>
             <td>
-                <div style="background:#c9b287; height:16px; width: {{ player.player_chart }}%;"></div>
+                <div style="background:#c9b287; height:16px; width:{{ player.player_chart }}%;"></div>
             </td>
             <td>{{ player.player_souls }}</td>
             <td>{{ player.player_damage }}</td>
