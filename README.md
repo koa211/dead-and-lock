@@ -32,3 +32,7 @@ deadnlock/ranks/static/ranks/ - CSS and fonts
 - Consuming a third-party REST API and parsing JSON responses
 - Rendering matplotlib charts server-side and returning them as HTTP responses
 
+# Whats next?
+- Bad idea to parse json using regex matching a text dump. Walking through 'json.loads()' instead
+- Add basic tests for correct output
+
