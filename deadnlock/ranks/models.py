@@ -10,6 +10,7 @@ class Match(models.Model):
 
 
 class Player(models.Model):
+    match_id = models.ForeignKey(Match, on_delete=models.CASCADE)
     player_id = models.TextField()
     player_name = models.TextField()
     player_damage = models.IntegerField()

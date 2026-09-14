@@ -4,6 +4,8 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.template import loader
 from django.template.loader import render_to_string
+from django.shortcuts import render
+
 import sys
 import urllib
 import json
@@ -21,6 +23,13 @@ from matplotlib.figure import Figure
 from .models import Match, Player
 
 
+def home_view(request):
+    # text box, when user enters number and enter, run find match API, if 200 then call daily
+    print("where am i")
+    template = loader.get_template("ranks/home.html")
+    return render(request, "ranks/home.html")
+
+
 def index(request):
     recent_10_match_list = Match.objects.all()
     template = loader.get_template("ranks/index.html")
@@ -31,69 +40,35 @@ def index(request):
 def daily(request, match_id):
     template = loader.get_template("ranks/match_details.html")
     lobby_dict = {"match_details": get_match_sum(match_id)}
-    print(repr(lobby_dict))
-    # call another function that creates the data visualiation table
-
     return HttpResponse(template.render(lobby_dict, request))
 
 
 # cache this somehow so I don't have to keep asking for it
 def get_match_sum(match_id):
     url = f"https://api.deadlock-api.com/v1/matches/{match_id}/metadata"
-
     response = requests.get(url)
-    byte_j = json.dumps(response.json(), separators=(",", ":"), indent=4)
+    data = response.json()
 
-    data = json.loads(byte_j)
+    duration = data["match_info"]["duration_s"]
 
-    print("writing to file")
-    with open(os.path.join(settings.MEDIA_ROOT, 'out.txt'), 'w') as file:
-        file.write(byte_j)
+    match_players = data["match_info"]["players"]
 
     obj_list = []
-    time = None
-    flag = False
-    player_id = 0
-    player_name = ""
-    player_dmg = 0
-    player_net = 0
-    player_team = ""
 
-    print("opening file to read")
-    with open(os.path.join(settings.MEDIA_ROOT, 'out.txt'), 'r') as file:
-        # get first instance of duration_s
-        for line in file:
-            if time:
-                break
-            if "duration_s" in line:
-                time = line[21:25]
+    for player in match_players:
+        player_id = player["account_id"]
+        player_name = get_acc_name(player_id)
+        player_team = "AM" if player["team"] == 1 else "HK"
+        player_net = player["net_worth"]
 
-        for line in file:
-            if "account_id" in line:
-                player_id = ''.join(re.findall(r'\d', line))
-                player_name = get_acc_name(player_id)
+        snap = player["stats"][-1]
 
-            if "time_stamp_s" in line and line.strip()[15:19] == time:
-                flag = True
-
-            if flag == True and "net_worth" in line:
-                player_net = ''.join(re.findall(r'\d', line))
-
-            if flag == True and "player_damage" in line:
-                player_dmg = ''.join(re.findall(r'\d', line))
-
-            if flag == True and re.findall("\\bteam\\b", line):
-                if ''.join(re.findall(r'\d', line)) == '1':
-                    player_team = "AM"
-                else:
-                    player_team = "HK"
-
-                flag = False
-                print(player_id, player_name, player_dmg, player_net, player_team)
-                ply = Player(0, player_id, player_name, player_dmg, player_net, player_team, 0)
-                obj_list.append(ply)
+        ply = Player(0, player_id, player_name, snap["player_damage"], snap["net_worth"], player_team, 0)
+        obj_list.append(ply)
 
     obj_list.sort(key=lambda x: x.player_damage, reverse=True)
+
+    print(obj_list)
 
     # take max player damage *1.1 and that will be 100
     ceiling = max([float(x.player_damage) for x in obj_list]) * 1.1
@@ -102,12 +77,6 @@ def get_match_sum(match_id):
     for one in obj_list:
         chart_num = (float(one.player_damage) / ceiling) * 100
         one.player_chart = chart_num
-
-    print(obj_list)
-
-    # somehow get the graph to appear right side of data
-    # print("create graph")
-    # postmortem(obj_list)
 
     return obj_list
 
