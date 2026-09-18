@@ -1,7 +1,7 @@
 import os
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.loader import render_to_string
 from django.shortcuts import render
@@ -21,13 +21,21 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 from .models import Match, Player
+from .forms import MatchForm
 
 
 def home_view(request):
     # text box, when user enters number and enter, run find match API, if 200 then call daily
-    print("where am i")
-    template = loader.get_template("ranks/home.html")
-    return render(request, "ranks/home.html")
+    if request.method == "POST":
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            match_id = form.cleaned_data["match_id"]
+            return HttpResponseRedirect(f"/ranks/{match_id}/")
+
+    else:
+        form = MatchForm()
+
+    return render(request, "ranks/home.html", {"form": form})
 
 
 def index(request):

@@ -5,8 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<label>Match ID</label>
-<input type="number"/>
-<input type="submit">
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
 </body>
 </html>
